@@ -4,11 +4,14 @@ namespace App\Datasets;
 
 use App\Core\Abstracts\Dataset;
 use App\Core\Abstracts\Model;
+use App\Core\Traits\ShouldSingleton;
 use App\Models\User;
 use Exception;
 
 class UserDataset extends Dataset
 {
+    use ShouldSingleton;
+
     private array $users = [];
 
     /**

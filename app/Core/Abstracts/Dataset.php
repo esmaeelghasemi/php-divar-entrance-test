@@ -6,8 +6,6 @@ use App\Core\Traits\ShouldSingleton;
 
 abstract class Dataset
 {
-    use ShouldSingleton;
-
     /**
      * Add data
      * @param Model $model
