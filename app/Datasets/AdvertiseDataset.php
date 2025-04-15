@@ -4,13 +4,15 @@ namespace App\Datasets;
 
 use App\Core\Abstracts\Dataset;
 use App\Core\Abstracts\Model;
+use App\Core\Traits\ShouldSingleton;
 use App\Models\Advertise;
-use App\Models\User;
 use Exception;
 
 class AdvertiseDataset extends Dataset
 {
-    private array $advertises;
+    use ShouldSingleton;
+
+    private array $advertises = [];
 
     /**
      * Add data to advertises
