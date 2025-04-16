@@ -96,15 +96,17 @@ abstract class Dataset
 
         foreach ($this->getData() as $item) {
 
-            $select = null;
+            $selectSuccessCounter = null;
             foreach ($data as $key => $value) {
 
-                $select = $this->getItemFieldValueByKey($item, $key) === $value ? $item : null;
+                if($this->getItemFieldValueByKey($item, $key) === $value) {
+                    $selectSuccessCounter++;
+                }
             }
 
-            if (!is_null($select)) {
+            if (count($data) === $selectSuccessCounter) {
 
-                $selected[] = $select;
+                $selected[] = $item;
             }
         }
 
