@@ -91,7 +91,7 @@ abstract class Dataset
 
         if (count($this->getData()) === 0) {
 
-            return null;
+            return $isMultiple ? [] : null;
         }
 
         foreach ($this->getData() as $item) {
