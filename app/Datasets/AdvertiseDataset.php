@@ -3,134 +3,30 @@
 namespace App\Datasets;
 
 use App\Core\Abstracts\Dataset;
-use App\Core\Abstracts\Model;
 use App\Core\Traits\ShouldSingleton;
 use App\Models\Advertise;
-use Exception;
 
 class AdvertiseDataset extends Dataset
 {
     use ShouldSingleton;
 
-    private array $advertises = [];
+    protected array $advertises = [];
 
     /**
-     * Add data to advertises
-     * @throws Exception
+     * Return belong model
+     * @return string
      */
-    protected function doAdd(Model $model): bool
+    protected function model(): string
     {
-        if (!$model instanceof Advertise) {
-
-            throw new Exception("model should be instance of advertise model");
-        }
-
-        $this->advertises[] = $model;
-        return true;
+        return Advertise::class;
     }
 
     /**
-     * Remove data from advertises
-     * @throws Exception
+     * return data name
+     * @return string
      */
-    protected function doRemove(Model $model): bool
+    protected function dataName(): string
     {
-        if (!$model instanceof Advertise) {
-
-            throw new Exception("model should be instance of advertise model");
-        }
-
-        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
-
-            return false;
-        }
-
-        unset($this->advertises[$objectIndex]);
-        return true;
-    }
-
-
-    /**
-     * Update data
-     * @param Model $model
-     * @param array $data
-     * @return Model|null
-     * @throws Exception
-     */
-    protected function doUpdate(Model $model, array $data): ?Model
-    {
-        if (!$model instanceof Advertise) {
-
-            throw new Exception("model should be instance of advertise model");
-        }
-
-        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
-
-            return null;
-        }
-
-        if (!is_numeric($object = $this->advertises[$objectIndex])) {
-
-            return null;
-        }
-
-        foreach ($data as $key => $value) {
-
-            $object->{$key} = $value;
-        }
-
-        $this->advertises[$objectIndex] = $object;
-
-        return $object;
-    }
-
-
-    /**
-     * Select advertise
-     * @param array $data
-     * @param bool $isMultiple
-     * @return array|Advertise|null
-     */
-    protected function doSelect(array $data, bool $isMultiple = false): array|Advertise|null
-    {
-        $selected = [];
-
-        if (count($this->advertises) === 0) {
-
-            return null;
-        }
-
-        foreach ($this->advertises as $advertise) {
-
-            $select = null;
-            foreach ($data as $key => $value) {
-
-                $select = $this->getItemFieldValueByKey($advertise, $key) === $value ? $advertise : null;
-            }
-
-            if (!is_null($select)) {
-
-                $selected[] = $select;
-            }
-        }
-
-        return $isMultiple ? $selected : (!empty($selected[0]) ? $selected[0] : null);
-    }
-
-    /**
-     * find object item index by model from data
-     * @param Model $model
-     * @return int|null
-     * @throws Exception
-     */
-    private function findObjectIndex(Model $model): ?int
-    {
-        if (!$model instanceof Advertise) {
-
-            throw new Exception("model should be instance of advertise model");
-        }
-
-        $findIndex = array_search($model, $this->advertises);
-        return !empty($findIndex) ? $findIndex : false;
+        return 'advertises';
     }
 }

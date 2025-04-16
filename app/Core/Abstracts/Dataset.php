@@ -2,12 +2,16 @@
 
 namespace App\Core\Abstracts;
 
+use App\Models\User;
+use Exception;
+
 abstract class Dataset
 {
     /**
      * Add data
      * @param Model $model
      * @return bool
+     * @throws Exception
      */
     public function add(Model $model): bool
     {
@@ -18,6 +22,7 @@ abstract class Dataset
      * Remove an item from data
      * @param Model $model
      * @return bool
+     * @throws Exception
      */
     public function remove(Model $model): bool
     {
@@ -29,6 +34,7 @@ abstract class Dataset
      * @param Model $model
      * @param array $data
      * @return Model|null
+     * @throws Exception
      */
     public function update(Model $model, array $data): ?Model
     {
@@ -47,13 +53,94 @@ abstract class Dataset
     }
 
 
-    abstract protected function doAdd(Model $model): bool;
+    /**
+     * @throws Exception
+     */
+    protected function doAdd(Model $model): bool
+    {
+        $this->assetInstance($model, $this->model());
 
-    abstract protected function doRemove(Model $model): bool;
+        $this->{$this->dataName()}[] = $model;
+        return true;
+    }
 
-    abstract protected function doSelect(array $data, bool $isMultiple = false): array|Model|null;
+    /**
+     * @throws Exception
+     */
+    protected function doRemove(Model $model): bool
+    {
+        $this->assetInstance($model, $this->model());
 
-    abstract protected function doUpdate(Model $model, array $data): ?Model;
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
+
+            return false;
+        }
+
+        unset($this->{$this->dataName()}[$objectIndex]);
+        return true;
+    }
+
+    /**
+     * @param array $data
+     * @param bool $isMultiple
+     * @return array|Model|null
+     */
+    protected function doSelect(array $data, bool $isMultiple = false): array|Model|null
+    {
+        $selected = [];
+
+        if (count($this->getData()) === 0) {
+
+            return null;
+        }
+
+        foreach ($this->getData() as $item) {
+
+            $select = null;
+            foreach ($data as $key => $value) {
+
+                $select = $this->getItemFieldValueByKey($item, $key) === $value ? $item : null;
+            }
+
+            if (!is_null($select)) {
+
+                $selected[] = $select;
+            }
+        }
+
+        return $isMultiple ? $selected : (!empty($selected[0]) ? $selected[0] : null);
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function doUpdate(Model $model, array $data): ?Model
+    {
+        $this->assetInstance($model, $this->model());
+
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
+
+            return null;
+        }
+
+        if (!is_numeric($object = $this->{$this->dataName()}[$objectIndex])) {
+
+            return null;
+        }
+
+        foreach ($data as $key => $value) {
+
+            $object->{$key} = $value;
+        }
+
+        $this->{$this->dataName()}[$objectIndex] = $object;
+
+        return $object;
+    }
+
+    abstract protected function model(): string;
+
+    abstract protected function dataName(): string;
 
     /**
      * Prepare to get item field value by key
@@ -71,5 +158,38 @@ abstract class Dataset
         }
 
         return $val;
+    }
+
+    /**
+     * find object item index by model from data
+     * @param Model $model
+     * @return int|null
+     * @throws Exception
+     */
+    private function findObjectIndex(Model $model): ?int
+    {
+        $findIndex = array_search($model, $this->getData());
+        return !empty($findIndex) ? $findIndex : false;
+    }
+
+    /**
+     * asset instance
+     * @throws Exception
+     */
+    private function assetInstance(Model $model, string $expect): void
+    {
+        if (!$model instanceof $expect) {
+
+            throw new Exception("model should be instance of {$expect}");
+        }
+    }
+
+    /**
+     * get data
+     * @return array
+     */
+    protected function getData(): array
+    {
+        return $this->{$this->dataName()};
     }
 }
