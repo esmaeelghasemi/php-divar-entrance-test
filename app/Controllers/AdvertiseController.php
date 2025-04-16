@@ -27,6 +27,12 @@ class AdvertiseController extends Controller
         $this->userMapper = new UserMapper(UserDataset::instance());
     }
 
+    /**
+     * Add advertise
+     * @param string $username
+     * @param string $title
+     * @return string
+     */
     public function add(string $username, string $title): string
     {
         try {
@@ -54,6 +60,12 @@ class AdvertiseController extends Controller
         }
     }
 
+    /**
+     * remove advertise
+     * @param string $username
+     * @param string $title
+     * @return string
+     */
     public function remove(string $username, string $title): string
     {
 
@@ -83,6 +95,11 @@ class AdvertiseController extends Controller
         }
     }
 
+    /**
+     * my advertises
+     * @param string $username
+     * @return string
+     */
     public function myAdvertises(string $username): string
     {
         $user = new User($username);
