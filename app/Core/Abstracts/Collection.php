@@ -21,7 +21,7 @@ abstract class Collection
      */
     public function toArray(?array $data = []): array
     {
-        if (empty(static::$items)) {
+        if (empty(static::$items) && !empty($this->data)) {
 
             return $this->makeArray($data);
         }
@@ -42,7 +42,7 @@ abstract class Collection
      */
     public function toString(?array $data = []): string
     {
-        if (empty(static::$items)) {
+        if (empty(static::$items) && !empty($this->data)) {
 
             return $this->makeString($data);
         }
