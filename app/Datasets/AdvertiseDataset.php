@@ -40,7 +40,7 @@ class AdvertiseDataset extends Dataset
             throw new Exception("model should be instance of advertise model");
         }
 
-        if (empty($objectIndex = $this->findObjectIndex($model))) {
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
 
             return false;
         }
@@ -69,7 +69,7 @@ class AdvertiseDataset extends Dataset
             return null;
         }
 
-        if (empty($object = $this->advertises[$objectIndex])) {
+        if (!is_numeric($object = $this->advertises[$objectIndex])) {
 
             return null;
         }
