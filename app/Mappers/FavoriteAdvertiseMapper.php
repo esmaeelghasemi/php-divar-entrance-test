@@ -35,4 +35,18 @@ class FavoriteAdvertiseMapper extends Mapper
             'user.username' => $user->username,
         ], true);
     }
+
+    /**
+     * Get user favorite advertises by tag
+     * @param User $user
+     * @param string $tag
+     * @return array
+     */
+    public function getUserFavoriteAdvertisesByTag(User $user, string $tag): array
+    {
+        return $this->dataset->select([
+            'user.username' => $user->username,
+            'advertise.tag' => $tag,
+        ], true);
+    }
 }
