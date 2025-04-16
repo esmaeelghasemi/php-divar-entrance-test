@@ -20,7 +20,7 @@ class AdvertiseDataset extends Dataset
      */
     protected function doAdd(Model $model): bool
     {
-        if(!$model instanceof Advertise) {
+        if (!$model instanceof Advertise) {
 
             throw new Exception("model should be instance of advertise model");
         }
@@ -35,7 +35,7 @@ class AdvertiseDataset extends Dataset
      */
     protected function doRemove(Model $model): bool
     {
-        if(!$model instanceof Advertise) {
+        if (!$model instanceof Advertise) {
 
             throw new Exception("model should be instance of advertise model");
         }
@@ -88,10 +88,13 @@ class AdvertiseDataset extends Dataset
     /**
      * Select advertise
      * @param array $data
-     * @return Model|null
+     * @param bool $isMultiple
+     * @return array|Advertise|null
      */
-    protected function doSelect(array $data): ?Advertise
+    protected function doSelect(array $data, bool $isMultiple = false): array|Advertise|null
     {
+        $selected = [];
+
         if (count($this->advertises) === 0) {
 
             return null;
@@ -102,16 +105,16 @@ class AdvertiseDataset extends Dataset
             $select = null;
             foreach ($data as $key => $value) {
 
-                $select = $advertise->{$key} === $value ? $advertise : null;
+                $select = $this->getItemFieldValueByKey($advertise, $key) === $value ? $advertise : null;
             }
 
             if (!is_null($select)) {
 
-                return $select;
+                $selected[] = $select;
             }
         }
 
-        return null;
+        return $isMultiple ? $selected : (!empty($selected[0]) ? $selected[0] : null);
     }
 
     /**
@@ -122,7 +125,7 @@ class AdvertiseDataset extends Dataset
      */
     private function findObjectIndex(Model $model): ?int
     {
-        if(!$model instanceof Advertise) {
+        if (!$model instanceof Advertise) {
 
             throw new Exception("model should be instance of advertise model");
         }

@@ -56,10 +56,13 @@ class UserDataset extends Dataset
     /**
      * Implement do select to select item from data
      * @param array $data
-     * @return Model|null
+     * @param bool $isMultiple
+     * @return array|User|null
      */
-    protected function doSelect(array $data): ?User
+    protected function doSelect(array $data, bool $isMultiple = false): array|User|null
     {
+        $selected = [];
+
         if (count($this->users) === 0) {
 
             return null;
@@ -75,11 +78,11 @@ class UserDataset extends Dataset
 
             if (!is_null($select)) {
 
-                return $select;
+                $selected[] = $select;
             }
         }
 
-        return null;
+        return $isMultiple ? $selected : (!empty($selected[0]) ? $selected[0] : null);
     }
 
     /**
