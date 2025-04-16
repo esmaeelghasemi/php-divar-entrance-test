@@ -27,6 +27,17 @@ abstract class Dataset
     }
 
     /**
+     * Update an item from data
+     * @param Model $model
+     * @param array $data
+     * @return Model|null
+     */
+    public function update(Model $model, array $data): ?Model
+    {
+        return $this->doUpdate($model, $data);
+    }
+
+    /**
      * Select and return a value from data
      * @param array $data
      * @return Model|null
@@ -39,4 +50,5 @@ abstract class Dataset
     abstract protected function doAdd(Model $model): bool;
     abstract protected function doRemove(Model $model): bool;
     abstract protected function doSelect(array $data): ?Model;
+    abstract protected function doUpdate(Model $model, array $data): ?Model;
 }

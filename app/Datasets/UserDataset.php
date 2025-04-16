@@ -22,7 +22,7 @@ class UserDataset extends Dataset
      */
     protected function doAdd(Model $model): bool
     {
-        if(!$model instanceof User) {
+        if (!$model instanceof User) {
 
             throw new Exception("model should be instance of user model");
         }
@@ -39,12 +39,12 @@ class UserDataset extends Dataset
      */
     protected function doRemove(Model $model): bool
     {
-        if(!$model instanceof User) {
+        if (!$model instanceof User) {
 
             throw new Exception("model should be instance of user model");
         }
 
-        if (empty($objectIndex = $this->findObjectIndex($model))) {
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
 
             return false;
         }
@@ -83,6 +83,40 @@ class UserDataset extends Dataset
     }
 
     /**
+     * Update data
+     * @param Model $model
+     * @param array $data
+     * @return Model|null
+     * @throws Exception
+     */
+    protected function doUpdate(Model $model, array $data): ?Model
+    {
+        if (!$model instanceof User) {
+
+            throw new Exception("model should be instance of user model");
+        }
+
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
+
+            return null;
+        }
+
+        if (empty($object = $this->users[$objectIndex])) {
+
+            return null;
+        }
+
+        foreach ($data as $key => $value) {
+
+            $object->{$key} = $value;
+        }
+
+        $this->users[$objectIndex] = $object;
+
+        return $object;
+    }
+
+    /**
      * find object item index by model from data
      * @param Model $model
      * @return int|null
@@ -90,7 +124,7 @@ class UserDataset extends Dataset
      */
     private function findObjectIndex(Model $model): ?int
     {
-        if(!$model instanceof User) {
+        if (!$model instanceof User) {
 
             throw new Exception("model should be instance of user model");
         }

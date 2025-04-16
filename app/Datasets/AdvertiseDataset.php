@@ -49,6 +49,42 @@ class AdvertiseDataset extends Dataset
         return true;
     }
 
+
+    /**
+     * Update data
+     * @param Model $model
+     * @param array $data
+     * @return Model|null
+     * @throws Exception
+     */
+    protected function doUpdate(Model $model, array $data): ?Model
+    {
+        if (!$model instanceof Advertise) {
+
+            throw new Exception("model should be instance of advertise model");
+        }
+
+        if (!is_numeric($objectIndex = $this->findObjectIndex($model))) {
+
+            return null;
+        }
+
+        if (empty($object = $this->advertises[$objectIndex])) {
+
+            return null;
+        }
+
+        foreach ($data as $key => $value) {
+
+            $object->{$key} = $value;
+        }
+
+        $this->advertises[$objectIndex] = $object;
+
+        return $object;
+    }
+
+
     /**
      * Select advertise
      * @param array $data
