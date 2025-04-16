@@ -31,9 +31,10 @@ class AdvertiseController extends Controller
      * Add advertise
      * @param string $username
      * @param string $title
+     * @param string|null $tag
      * @return string
      */
-    public function add(string $username, string $title): string
+    public function add(string $username, string $title, ?string $tag = null): string
     {
         try {
 
@@ -43,7 +44,7 @@ class AdvertiseController extends Controller
                 new AddAdvertiseService(
                     $this->advertiseMapper,
                     $this->userMapper,
-                    new Advertise($user, $title),
+                    new Advertise($user, $title, $tag),
                     $user
                 )
             );
@@ -98,18 +99,21 @@ class AdvertiseController extends Controller
     /**
      * my advertises
      * @param string $username
+     * @param string|null $tag
      * @return string
      */
-    public function myAdvertises(string $username): string
+    public function myAdvertises(string $username, ?string $tag = null): string
     {
         $user = new User($username);
 
-        if(empty($this->userMapper->findByUsername($username))) {
+        if (empty($this->userMapper->findByUsername($username))) {
 
             return 'invalid username';
         }
 
-        $advertises = $this->advertiseMapper->getUserAdvertises($user);
+        $advertises = !empty($tag) ?
+            $this->advertiseMapper->getUserAdvertisesByTag($user, $tag) :
+            $this->advertiseMapper->getUserAdvertises($user);
 
         return AdvertiseCollection::collect($advertises)->toString();
     }
