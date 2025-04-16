@@ -7,6 +7,7 @@ use App\Core\Abstracts\Facade;
 
 /**
  * @method static string add(string $username, string $title)
+ * @method static string remove(string $username, string $title)
  */
 class Advertise extends Facade
 {

@@ -12,6 +12,7 @@ use App\Mappers\UserMapper;
 use App\Models\Advertise;
 use App\Models\User;
 use App\Services\Advertise\AddAdvertiseService;
+use App\Services\Advertise\RemoveAdvertiseService;
 
 class AdvertiseController extends Controller
 {
@@ -37,6 +38,35 @@ class AdvertiseController extends Controller
             return $e->getMessage();
 
         } catch (ServerErrorException) {
+
+            return 'server error';
+        }
+    }
+
+    public function remove(string $username, string $title): string
+    {
+
+        try {
+
+            $user = new User($username);
+            $advertise = new Advertise($user, $title);
+
+            $invoked = Helper::invokeService(
+                new RemoveAdvertiseService(
+                    new AdvertiseMapper(AdvertiseDataset::instance()),
+                    new UserMapper(UserDataset::instance()),
+                    $advertise,
+                    $user
+                )
+            );
+
+            return 'removed successfully';
+
+        } catch (\ErrorException $e) {
+
+            return $e->getMessage();
+
+        } catch (ServerErrorException $e) {
 
             return 'server error';
         }
