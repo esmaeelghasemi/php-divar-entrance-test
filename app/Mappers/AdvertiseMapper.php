@@ -34,6 +34,27 @@ class AdvertiseMapper extends Mapper
     }
 
     /**
+     * Implement delete advertise
+     * @param Model $model
+     * @return bool
+     */
+    protected function doDelete(Model $model): bool
+    {
+        return $this->dataset->remove($model);
+    }
+
+    /**
+     * Implement update advertise
+     * @param Model $model
+     * @param array $data
+     * @return Model|null
+     */
+    protected function dpUpdate(Model $model, array $data): ?Model
+    {
+        return $this->dataset->update($model, $data);
+    }
+
+    /**
      * find user by username
      * @param string $title
      * @return Model|null

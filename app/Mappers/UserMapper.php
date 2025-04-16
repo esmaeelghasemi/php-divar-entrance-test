@@ -32,6 +32,27 @@ class UserMapper extends Mapper
     }
 
     /**
+     * implement delete item from data
+     * @param Model $model
+     * @return bool
+     */
+    protected function doDelete(Model $model): bool
+    {
+        return $this->dataset->remove($model);
+    }
+
+    /**
+     * Implement update item in data
+     * @param Model $model
+     * @param array $data
+     * @return Model|null
+     */
+    protected function dpUpdate(Model $model, array $data): ?Model
+    {
+        return $this->dataset->update($model, $data);
+    }
+
+    /**
      * find user by username
      * @param string $username
      * @return Model|null
