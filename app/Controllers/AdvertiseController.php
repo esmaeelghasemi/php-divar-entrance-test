@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Collections\AdvertiseCollection;
 use App\Core\Abstracts\Controller;
 use App\Datasets\AdvertiseDataset;
 use App\Datasets\UserDataset;
@@ -16,6 +17,16 @@ use App\Services\Advertise\RemoveAdvertiseService;
 
 class AdvertiseController extends Controller
 {
+    protected AdvertiseMapper $advertiseMapper;
+    protected UserMapper $userMapper;
+
+
+    public function __construct()
+    {
+        $this->advertiseMapper = new AdvertiseMapper(AdvertiseDataset::instance());
+        $this->userMapper = new UserMapper(UserDataset::instance());
+    }
+
     public function add(string $username, string $title): string
     {
         try {
@@ -24,8 +35,8 @@ class AdvertiseController extends Controller
 
             $invoked = Helper::invokeService(
                 new AddAdvertiseService(
-                    new AdvertiseMapper(AdvertiseDataset::instance()),
-                    new UserMapper(UserDataset::instance()),
+                    $this->advertiseMapper,
+                    $this->userMapper,
                     new Advertise($user, $title),
                     $user
                 )
@@ -53,8 +64,8 @@ class AdvertiseController extends Controller
 
             $invoked = Helper::invokeService(
                 new RemoveAdvertiseService(
-                    new AdvertiseMapper(AdvertiseDataset::instance()),
-                    new UserMapper(UserDataset::instance()),
+                    $this->advertiseMapper,
+                    $this->userMapper,
                     $advertise,
                     $user
                 )
@@ -70,5 +81,19 @@ class AdvertiseController extends Controller
 
             return 'server error';
         }
+    }
+
+    public function myAdvertises(string $username): string
+    {
+        $user = new User($username);
+
+        if(empty($this->userMapper->findByUsername($username))) {
+
+            return 'invalid username';
+        }
+
+        $advertises = $this->advertiseMapper->getUserAdvertises($user);
+
+        return AdvertiseCollection::collect($advertises)->toString();
     }
 }
