@@ -45,7 +45,7 @@ class AddFavoriteAdvertiseService extends Service
             throw new ErrorException('already favorite');
         }
 
-        $favoriteAdvertise = new FavoriteAdvertise($this->user, $this->advertise);
+        $favoriteAdvertise = new FavoriteAdvertise($user, $advertise);
 
         if (empty($this->favoriteAdvertiseMapper->insert($favoriteAdvertise))) {
 
