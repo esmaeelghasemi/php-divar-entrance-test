@@ -103,9 +103,10 @@ class FavoriteAdvertiseController extends Controller
     /**
      * Get user favorite list
      * @param string $username
+     * @param string|null $tag
      * @return string
      */
-    public function myFavorites(string $username): string
+    public function myFavorites(string $username, ?string $tag = null): string
     {
         $user = new User($username);
 
@@ -114,7 +115,9 @@ class FavoriteAdvertiseController extends Controller
             return 'invalid username';
         }
 
-        $favoriteAdvertises = $this->favoriteAdvertiseMapper->getUserFavoriteAdvertises($user);
+        $favoriteAdvertises = !empty($tag) ?
+            $this->favoriteAdvertiseMapper->getUserFavoriteAdvertisesByTag($user, $tag) :
+            $this->favoriteAdvertiseMapper->getUserFavoriteAdvertises($user);
 
         return FavoriteAdvertiseCollection::collect($favoriteAdvertises)->toString();
     }
