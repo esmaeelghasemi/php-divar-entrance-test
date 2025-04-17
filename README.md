@@ -27,7 +27,7 @@ To get started:
 1. **Clone the repository**
 
    ```bash
-   git clone git remote add origin https://github.com/esmaeelghasemi/php-divar-entrance-test.git
+   git clone https://github.com/esmaeelghasemi/php-divar-entrance-test.git
    cd php-divar-entrance-test
    ```
 
